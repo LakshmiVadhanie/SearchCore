@@ -1,0 +1,63 @@
+syntax = "proto3";
+
+package searchcore;
+
+option go_package = "github.com/dhruvgorasiya/searchcore/pb";
+
+service SearchService {
+    rpc IndexDocument  (IndexRequest)  returns (IndexResponse);
+    rpc Search         (SearchRequest) returns (SearchResponse);
+    rpc DeleteDocument (DeleteRequest) returns (DeleteResponse);
+    rpc Stats          (StatsRequest)  returns (StatsResponse);
+}
+
+// --- IndexDocument ---
+
+message IndexRequest {
+    string content = 1;
+}
+
+message IndexResponse {
+    int32  doc_id  = 1;
+    bool   success = 2;
+    string message = 3;
+}
+
+// --- Search ---
+
+message SearchRequest {
+    string query = 1;
+    int32  top_k = 2;
+}
+
+message SearchResult {
+    int32  doc_id  = 1;
+    float  score   = 2;
+    string snippet = 3;
+}
+
+message SearchResponse {
+    repeated SearchResult results = 1;
+    int32                 total   = 2;
+}
+
+// --- DeleteDocument ---
+
+message DeleteRequest {
+    int32 doc_id = 1;
+}
+
+message DeleteResponse {
+    bool   success = 1;
+    string message = 2;
+}
+
+// --- Stats ---
+
+message StatsRequest {}
+
+message StatsResponse {
+    int32 total_docs     = 1;
+    int32 total_terms    = 2;
+    float avg_doc_length = 3;
+}
